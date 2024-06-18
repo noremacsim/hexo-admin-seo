@@ -17,7 +17,11 @@ var Editor = React.createClass({
     raw: PT.string,
     updatedRaw: PT.string,
     onChangeTitle: PT.func,
+    onChangeKeyWords: PT.func,
+    onChangemetaDescription: PT.func,
     title: PT.string,
+    metaDescription: PT.string,
+    keyWords: PT.string,
     updated: PT.object,
     isDraft: PT.bool,
     onPublish: PT.func.isRequired,
@@ -46,6 +50,14 @@ var Editor = React.createClass({
     return this.props.onChangeTitle(e.target.value)
   },
 
+  handleChangeKeyWords: function (e) {
+    return this.props.onChangeKeyWords(e.target.value)
+  },
+
+  handleChangeMetaDescription: function (e) {
+    return this.props.onChangeMetaDescription(e.target.value)
+  },
+
   handleScroll: function (percent) {
     if (!this.state.checkingGrammar) {
       var node = this.refs.rendered.getDOMNode()
@@ -70,6 +82,14 @@ var Editor = React.createClass({
           className='editor_title'
           value={this.props.title}
           onChange={this.handleChangeTitle}/>
+        <input
+            className='editor_meta_description'
+            value={this.props.metaDescription}
+            onChange={this.handleChangeMetaDescription}/>
+        <input
+            className='editor_key_words'
+            value={this.props.keyWords}
+            onChange={this.handleChangeKeyWords}/>
         {!this.props.isPage && <ConfigDropper
           post={this.props.post}
           tagsCategoriesAndMetadata={this.props.tagsCategoriesAndMetadata}

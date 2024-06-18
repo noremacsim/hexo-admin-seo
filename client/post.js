@@ -95,6 +95,22 @@ var Post = React.createClass({
     this._post({title: title})
   },
 
+  handleChangeKeyWords: function (keyWords) {
+    if (keyWords === this.state.keyWords) {
+      return
+    }
+    this.setState({keyWords: keyWords});
+    this._post({keyWords: keyWords})
+  },
+
+  handleChangeMetaDescription: function (metaDescription) {
+    if (metaDescription === this.state.metaDescription) {
+      return
+    }
+    this.setState({metaDescription: metaDescription});
+    this._post({metaDescription: metaDescription})
+  },
+
   handlePublish: function () {
     if (!this.state.post.isDraft) return
     api.publish(this.state.post._id).then((post) => {
@@ -129,6 +145,8 @@ var Post = React.createClass({
     var raw = parts.slice(_slice).join('---').trim();
     this.setState({
       title: data.title,
+      metaDescription: data.metaDescription,
+      keyWords: data.keyWords,
       initialRaw: raw,
       raw: raw,
       rendered: data.content
@@ -149,10 +167,14 @@ var Post = React.createClass({
       isDraft: post.isDraft,
       updated: this.state.updated,
       title: this.state.title,
+      metaDescription: this.state.metaDescription,
+      keyWords: this.state.keyWords,
       rendered: this.state.rendered,
       onChange: this.handleChange,
       onChangeContent: this.handleChangeContent,
       onChangeTitle: this.handleChangeTitle,
+      onChangeKeyWords: this.handleChangeKeyWords,
+      onChangemetaDescription: this.handleChangeMetaDescription,
       onPublish: this.handlePublish,
       onUnpublish: this.handleUnpublish,
       onRemove: this.handleRemove,

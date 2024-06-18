@@ -267,6 +267,7 @@ module.exports = function (app, hexo) {
   });
 
   use('posts/new', function (req, res, next) {
+    console.log(req);
     if (req.method !== 'POST') return next()
     if (!req.body) {
       return res.send(400, 'No post body given');
@@ -277,6 +278,7 @@ module.exports = function (app, hexo) {
 
     var postParameters = {title: req.body.title, layout: 'draft', date: new Date(), author: hexo.config.author};
     extend(postParameters, hexo.config.metadata || {});
+    console.log(postParameters);
     hexo.post.create(postParameters)
     .error(function(err) {
       console.error(err, err.stack)
