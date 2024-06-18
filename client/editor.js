@@ -55,7 +55,7 @@ var Editor = React.createClass({
   },
 
   handleChangeMetaDescription: function (e) {
-    return this.props.onChangeMetaDescription(e.target.value)
+    return this.props.onChangemetaDescription(e.target.value)
   },
 
   handleScroll: function (percent) {
@@ -82,14 +82,20 @@ var Editor = React.createClass({
           className='editor_title'
           value={this.props.title}
           onChange={this.handleChangeTitle}/>
-        <input
-            className='editor_meta_description'
-            value={this.props.metaDescription}
-            onChange={this.handleChangeMetaDescription}/>
-        <input
-            className='editor_key_words'
-            value={this.props.keyWords}
-            onChange={this.handleChangeKeyWords}/>
+        <div>
+          <input
+              placeholder='Meta Description'
+              className='other_inputs'
+              value={this.props.metaDescription}
+              onChange={this.handleChangeMetaDescription}/>
+        </div>
+        <div>
+          <input
+              placeholder='keyWords'
+              className='other_inputs'
+              value={this.props.keyWords}
+              onChange={this.handleChangeKeyWords}/>
+        </div>
         {!this.props.isPage && <ConfigDropper
           post={this.props.post}
           tagsCategoriesAndMetadata={this.props.tagsCategoriesAndMetadata}

@@ -86,7 +86,6 @@ var CodeMirror = React.createClass({
           filename = prompt(`What would you like to name the photo? All files saved as pngs. Name will be relative to ${filePath}.`, 'image.png')
         }
       }
-      console.log(filename)
       api.uploadImage(event.target.result, filename).then((res) =>
         this.cm.replaceSelection(`\n![${res.msg}](${res.src})`)
       );

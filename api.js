@@ -267,7 +267,6 @@ module.exports = function (app, hexo) {
   });
 
   use('posts/new', function (req, res, next) {
-    console.log(req);
     if (req.method !== 'POST') return next()
     if (!req.body) {
       return res.send(400, 'No post body given');
@@ -276,9 +275,8 @@ module.exports = function (app, hexo) {
       return res.send(400, 'No title given');
     }
 
-    var postParameters = {title: req.body.title, layout: 'draft', date: new Date(), author: hexo.config.author};
+    var postParameters = {title: req.body.title, layout: 'draft', date: new Date(), author: hexo.config.author, keyWords: '', metaDescription: '', featureImage: ''};
     extend(postParameters, hexo.config.metadata || {});
-    console.log(postParameters);
     hexo.post.create(postParameters)
     .error(function(err) {
       console.error(err, err.stack)
@@ -351,6 +349,7 @@ module.exports = function (app, hexo) {
     var imagePrefix = 'pasted-'
     var askImageFilename = false
     var overwriteImages = false
+
     // check for image settings and set them if they exist
     if (settings.options) {
       askImageFilename = !!settings.options.askImageFilename
@@ -360,11 +359,14 @@ module.exports = function (app, hexo) {
     }
 
     var msg = 'upload successful'
-    var filename = imagePrefix + i +'.png'
     var i = 0
-    while (fs.existsSync(path.join(hexo.source_dir, imagePath, filename))) {
+
+    while (fs.existsSync(path.join(hexo.source_dir, imagePath, imagePrefix + i +'.png'))) {
       i += 1
     }
+
+    var filename = imagePrefix + i +'.png'
+
     if (req.body.filename) {
       var givenFilename = req.body.filename
       // check for png ending, add it if not there
@@ -397,7 +399,7 @@ module.exports = function (app, hexo) {
       if (err) {
         console.log(err)
       }
-      var imageSrc = path.join(hexo.config.root + filename).replace(/\\/g, '/')
+      var imageSrc = filename.replace(/\\/g, '/')
       hexo.source.process().then(function () {
         res.done({
           src: imageSrc,

@@ -82,9 +82,48 @@ var Post = React.createClass({
     this.setState({
       raw: text,
       updated: null,
-      rendered: marked(text)
+      rendered: this.RenderAndReplaceImageLinks(text)
     })
     this._post({_content: text})
+  },
+
+  RenderAndReplaceImageLinks: function (text) {
+    let html = marked(text);
+    let featureImageSet = false;
+
+    // Create a temporary DOM element to hold the text
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // Select all image elements within the temporary element
+    const images = tempDiv.querySelectorAll('img');
+
+    // Loop through each image element
+    images.forEach(image => {
+      // Get the current src attribute
+      const src = image.getAttribute('src');
+      let newSrc = src;
+
+      // Check if the src doesn't contain '/blog/'
+      if (!src.includes('/blog/')) {
+        // Modify the src attribute to include '/blog/'
+        newSrc = '/blog/' + src;
+        image.setAttribute('src', newSrc);
+      }
+
+      this.handleChangeFeatureImage(newSrc);
+      featureImageSet = true;
+    });
+
+    return tempDiv.innerHTML;
+  },
+
+  handleChangeFeatureImage: function (imageSrc) {
+    if (imageSrc === this.state.featureImage) {
+      return
+    }
+    this.setState({featureImage: imageSrc});
+    this._post({featureImage: imageSrc})
   },
 
   handleChangeTitle: function (title) {
@@ -147,6 +186,7 @@ var Post = React.createClass({
       title: data.title,
       metaDescription: data.metaDescription,
       keyWords: data.keyWords,
+      featureImage: data.featureImage,
       initialRaw: raw,
       raw: raw,
       rendered: data.content
